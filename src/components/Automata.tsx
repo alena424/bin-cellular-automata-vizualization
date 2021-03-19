@@ -13,11 +13,10 @@ type Row = {
 }
 const Automata: React.FC<AutomataProps> = props => {
     const { cells } = props
-    console.log(cells)
 
     return (
         <div className={"row"}>
-            {cells.map(cell => <Cell cell={cell}/>)}
+            {cells.map((cell, key) => <Cell cell={cell} key={key}/>)}
         </div>
     );
 };

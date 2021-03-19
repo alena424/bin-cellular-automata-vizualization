@@ -12,6 +12,7 @@ const App = () => {
     const [running, setRunning] = useState<NodeJS.Timeout | undefined>(undefined)
     const [speed, setSpeed] = useState<number>(1000)
     const [iterations, setIteration] = useState<number>(0)
+    const [maxNumberSteps, setMaxNumberSteps] = useState<number>(10)
 
     const randomConfig: CellType[] = Array(boardWidth).fill(undefined).map(() => {
         const randomNumber = Math.floor(Math.random() * 10);
@@ -34,25 +35,70 @@ const App = () => {
     }
 
     const nextInterval = () => {
-        const newRows = [...rows]
-        newRows.push(randomConfig)
-        setRows( (rows) => {
-            const newRows = [...rows]
-            newRows.push(randomConfig)
-            return newRows
+        if (iterations >= maxNumberSteps) return;
+        setIteration((iterations) => {
+            return iterations + 1
         })
-        setIteration((iterations) => iterations + 1)
+        setRows((rows) => {
+            const newRows = [...rows];
+            const generatedNewRow = generateNewRow(rows[rows.length - 1]);
+            console.log("generated", generatedNewRow)
+            newRows.push(generatedNewRow);
+            return newRows;
+        })
     }
+    const sameArrays = (arr1: CellType[], arr2: CellType[]) => {
+        for (let i = 0; i < arr1.length; i++){
+            if (arr1[i].active !== arr2[i].active){
+                return false
+            }
+        }
+        return true
+    }
+
+    React.useEffect(() => {
+        if (rows.length < 2) return
+        if (sameArrays(rows[rows.length-1], rows[rows.length-2])){
+            _setRunning(false)
+        }
+    }, [rows])
+
+    const lookAround = (index: number, row: CellType[]) => {
+        let points = 0;
+        for (let idx =  index - neighborhood; idx <= index + neighborhood; idx++) {
+            if (row[idx] !== undefined) {
+                points += row[idx].active ? 1 : 0;
+            }
+        }
+        return points;
+    }
+
+    const generateNewRow = (row: CellType[]): CellType[] => {
+        console.log("input", row)
+        return row.map((cell, index) => {
+            if (lookAround(index, row) > neighborhood) {
+                console.log("true")
+                return { ...cell, active: true };
+            }
+            return { ...cell, active: false };
+        })
+    }
+
+    React.useEffect(() => {
+        if (iterations >= maxNumberSteps) {
+            _setRunning(false)
+        }
+    }, [iterations])
 
     const _setRunning = (isRunning: boolean) => {
         if (running) {
-            clearInterval(running)
+            clearInterval(running);
         }
-        if( isRunning ) {
+        if (isRunning) {
             const running = setInterval(nextInterval, speed);
-            setRunning(running)
+            setRunning(running);
         } else {
-            setRunning(undefined)
+            setRunning(undefined);
         }
     }
     const renderConfig = (
@@ -71,10 +117,13 @@ const App = () => {
                     }}/>
             </div>
             <div className={"configItem"}>
-                <label>Surroundings: </label>
-                <select name="sur" id="neighborhood" onChange={selectNeighborhood}>
-                    <option value="1" selected={neighborhood === 1}>1-neighborhood</option>
-                    <option value="2" selected={neighborhood === 2}>2-neighborhood</option>
+                <label>Neighborhood: </label>
+                <select name="sur" id="neighborhood" onChange={selectNeighborhood}
+                        defaultValue={neighborhood.toString()}>
+                    <option value="1">1-neighborhood</option>
+                    <option value="2">2-neighborhood</option>
+                    <option value="3">3-neighborhood</option>
+                    <option value="4">4-neighborhood</option>
                 </select>
             </div>
             <div className={"configItem"}>
@@ -87,6 +136,18 @@ const App = () => {
                     onChange={(val) => {
                         const speed = parseInt(val.currentTarget.value)
                         setSpeed(speed)
+                    }}/>
+            </div>
+            <div className={"configItem"}>
+                <label>Maximum number of steps: </label>
+                <input
+                    pattern="^\d*$"
+                    defaultValue={maxNumberSteps}
+                    style={{ maxWidth: 50 }}
+                    type="number"
+                    onChange={(val) => {
+                        const maxSteps = parseInt(val.currentTarget.value)
+                        setMaxNumberSteps(maxSteps)
                     }}/>
             </div>
             <div className={"configItem"}>
@@ -104,7 +165,7 @@ const App = () => {
 
     return (
         <div className="App">
-            <h1>BIN - celulární automat</h1>
+            <h1>BIN - visualization celular automata</h1>
             {renderConfig}
             <br/>
             <br/>
