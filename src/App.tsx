@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Automata from "./components/Automata";
 import { CellType } from "./types";
-import { isNumber } from "util";
 
 const App = () => {
     const defaultNumberOfCells = 50
     const [boardWidth, setBoardWidth] = useState<number>(defaultNumberOfCells)
     const [neighborhood, setNeighborhood] = useState<number>(1)
     const [running, setRunning] = useState<NodeJS.Timeout | undefined>(undefined)
-    const [speed, setSpeed] = useState<number>(1000)
+    const [delay, setDelay] = useState<number>(1000)
     const [iterations, setIteration] = useState<number>(0)
     const [maxNumberSteps, setMaxNumberSteps] = useState<number>(10)
 
@@ -42,7 +40,6 @@ const App = () => {
         setRows((rows) => {
             const newRows = [...rows];
             const generatedNewRow = generateNewRow(rows[rows.length - 1]);
-            console.log("generated", generatedNewRow)
             newRows.push(generatedNewRow);
             return newRows;
         })
@@ -74,10 +71,8 @@ const App = () => {
     }
 
     const generateNewRow = (row: CellType[]): CellType[] => {
-        console.log("input", row)
         return row.map((cell, index) => {
             if (lookAround(index, row) > neighborhood) {
-                console.log("true")
                 return { ...cell, active: true };
             }
             return { ...cell, active: false };
@@ -95,7 +90,7 @@ const App = () => {
             clearInterval(running);
         }
         if (isRunning) {
-            const running = setInterval(nextInterval, speed);
+            const running = setInterval(nextInterval, delay);
             setRunning(running);
         } else {
             setRunning(undefined);
@@ -127,15 +122,15 @@ const App = () => {
                 </select>
             </div>
             <div className={"configItem"}>
-                <label>Speed: </label>
+                <label>Delay: </label>
                 <input
                     pattern="^\d*$"
-                    defaultValue={speed}
+                    defaultValue={delay}
                     style={{ maxWidth: 50 }}
                     type="number"
                     onChange={(val) => {
-                        const speed = parseInt(val.currentTarget.value)
-                        setSpeed(speed)
+                        const delay = parseInt(val.currentTarget.value)
+                        setDelay(delay)
                     }}/>
             </div>
             <div className={"configItem"}>
@@ -165,7 +160,7 @@ const App = () => {
 
     return (
         <div className="App">
-            <h1>BIN - visualization celular automata</h1>
+            <h1>BIN - visualization cellular automata</h1>
             {renderConfig}
             <br/>
             <br/>

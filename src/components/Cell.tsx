@@ -5,9 +5,6 @@ type CellProps = {
     cell: CellType
 }
 
-type Row = {
-    cells: [],
-}
 const Cell: React.FC<CellProps> = props => {
     const {cell} = props
 
