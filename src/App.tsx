@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
 import './App.css';
 import Automata from "./components/Automata";
-import { CellType } from "./types";
+import { CellType, RuleType } from "./models/cellModel";
+import { compareArrays, emptyArray, emptyRule, generateNewRow, randomArray, randomRule } from "./utils/cellUtils";
+import AutomataConfig from "./components/AutomataConfig";
+import Rule from "./components/Rule";
+import ConfigRulesSection from "./components/ConfigRulesSection";
 
-const App = () => {
-    const defaultNumberOfCells = 50
-    const [boardWidth, setBoardWidth] = useState<number>(defaultNumberOfCells)
-    const [neighborhood, setNeighborhood] = useState<number>(1)
-    const [running, setRunning] = useState<NodeJS.Timeout | undefined>(undefined)
-    const [delay, setDelay] = useState<number>(1000)
-    const [iterations, setIteration] = useState<number>(0)
-    const [maxNumberSteps, setMaxNumberSteps] = useState<number>(10)
+const defaultNumberOfCells = 10
+const defaultNumberOfMaxSteps = 10
+const defaultDelay = 1000
 
-    const randomConfig: CellType[] = Array(boardWidth).fill(undefined).map(() => {
-        const randomNumber = Math.floor(Math.random() * 10);
-        if (randomNumber % 2 === 0) {
-            return { active: true }
-        }
-        return { active: false }
-    })
+const App: React.FC = () => {
+    const [boardWidth, setBoardWidth] = useState<number>(defaultNumberOfCells);
+    const [neighborhood, setNeighborhood] = useState<number>(1);
+    const [running, setRunning] = useState<NodeJS.Timeout | undefined>(undefined);
+    const [delay, setDelay] = useState<number>(defaultDelay);
+    const [iterations, setIteration] = useState<number>(0);
+    const [rows, setRows] = useState<CellType[][]>([randomArray(boardWidth)]);
+    const [maxNumberSteps, setMaxNumberSteps] = useState<number>(defaultNumberOfMaxSteps);
+    const ruleLength = neighborhood * 2 + 1;
+    const numberOfRules = Math.pow(2, ruleLength);
+    const [rules, setRules] = useState<RuleType[]>(randomRule(numberOfRules));
 
-    const [rows, setRows] = useState<CellType[][]>([randomConfig])
 
-    const selectNeighborhood = (e: any) => {
-        const val = e.target.value
-        setNeighborhood(parseInt(val))
-    }
-
+    React.useEffect(() => {
+        setRules(randomRule(numberOfRules))
+    }, [numberOfRules])
     const initBoard = () => {
         setIteration(0)
-        setRows([randomConfig])
+        setRows([randomArray(boardWidth)])
+    }
+    const clear = () => {
+        setIteration(0)
+        setRows([emptyArray(boardWidth)])
     }
 
     const nextInterval = () => {
@@ -39,51 +43,11 @@ const App = () => {
         })
         setRows((rows) => {
             const newRows = [...rows];
-            const generatedNewRow = generateNewRow(rows[rows.length - 1]);
+            const generatedNewRow = generateNewRow(rows[rows.length - 1], neighborhood, rules);
             newRows.push(generatedNewRow);
             return newRows;
         })
     }
-    const sameArrays = (arr1: CellType[], arr2: CellType[]) => {
-        for (let i = 0; i < arr1.length; i++){
-            if (arr1[i].active !== arr2[i].active){
-                return false
-            }
-        }
-        return true
-    }
-
-    React.useEffect(() => {
-        if (rows.length < 2) return
-        if (sameArrays(rows[rows.length-1], rows[rows.length-2])){
-            _setRunning(false)
-        }
-    }, [rows])
-
-    const lookAround = (index: number, row: CellType[]) => {
-        let points = 0;
-        for (let idx =  index - neighborhood; idx <= index + neighborhood; idx++) {
-            if (row[idx] !== undefined) {
-                points += row[idx].active ? 1 : 0;
-            }
-        }
-        return points;
-    }
-
-    const generateNewRow = (row: CellType[]): CellType[] => {
-        return row.map((cell, index) => {
-            if (lookAround(index, row) > neighborhood) {
-                return { ...cell, active: true };
-            }
-            return { ...cell, active: false };
-        })
-    }
-
-    React.useEffect(() => {
-        if (iterations >= maxNumberSteps) {
-            _setRunning(false)
-        }
-    }, [iterations])
 
     const _setRunning = (isRunning: boolean) => {
         if (running) {
@@ -96,84 +60,121 @@ const App = () => {
             setRunning(undefined);
         }
     }
-    const renderConfig = (
-        <div className={"row"}>
-            <div className={"configItem"}>
-                <label>Number of rows: </label>
-                <input
-                    pattern="^\d*$"
-                    defaultValue={boardWidth}
-                    style={{ maxWidth: 50 }} type="number"
-                    onChange={(val) => {
-                        const rows = parseInt(val.currentTarget.value)
-                        if (rows >= 10 && rows <= 100) {
-                            setBoardWidth(rows)
-                        }
-                    }}/>
-            </div>
-            <div className={"configItem"}>
-                <label>Neighborhood: </label>
-                <select name="sur" id="neighborhood" onChange={selectNeighborhood}
-                        defaultValue={neighborhood.toString()}>
-                    <option value="1">1-neighborhood</option>
-                    <option value="2">2-neighborhood</option>
-                    <option value="3">3-neighborhood</option>
-                    <option value="4">4-neighborhood</option>
-                </select>
-            </div>
-            <div className={"configItem"}>
-                <label>Delay: </label>
-                <input
-                    pattern="^\d*$"
-                    defaultValue={delay}
-                    style={{ maxWidth: 50 }}
-                    type="number"
-                    onChange={(val) => {
-                        const delay = parseInt(val.currentTarget.value)
-                        setDelay(delay)
-                    }}/>
-            </div>
-            <div className={"configItem"}>
-                <label>Maximum number of steps: </label>
-                <input
-                    pattern="^\d*$"
-                    defaultValue={maxNumberSteps}
-                    style={{ maxWidth: 50 }}
-                    type="number"
-                    onChange={(val) => {
-                        const maxSteps = parseInt(val.currentTarget.value)
-                        setMaxNumberSteps(maxSteps)
-                    }}/>
-            </div>
+
+
+    React.useEffect(() => {
+        if (rows.length < 2) return
+        if (compareArrays(rows[rows.length - 1], rows[rows.length - 2])) {
+            _setRunning(false)
+        }
+    }, [rows])
+
+    React.useEffect(() => {
+        if (iterations >= maxNumberSteps) {
+            _setRunning(false)
+        }
+    }, [iterations, maxNumberSteps])
+
+
+    const actions = (
+        <div className="buttons is-centered">
             <div className={"configItem"}>
                 {
                     running
-                        ? <button onClick={() => _setRunning(false)}>Stop</button>
-                        : <button onClick={() => _setRunning(true)}>Start</button>
+                        ? <button className="button is-danger" onClick={() => _setRunning(false)}>Stop</button>
+                        : <button className="button is-success" onClick={() => _setRunning(true)}>Start</button>
                 }
             </div>
             <div className={"configItem"}>
-                <button onClick={initBoard}>Init</button>
+                <button className="button is-info" onClick={nextInterval}>Step</button>
+            </div>
+            <div className={"configItem"}>
+                <button className="button is-info" onClick={initBoard}>Random Init</button>
+            </div>
+            <div className={"configItem "}>
+                <button className="button is-danger" onClick={clear}>Clear</button>
             </div>
         </div>
     )
+    const onClick = (cell: CellType, key: number) => {
+        if (iterations === 0) {
+            console.log("hello", key, cell)
+            const newCell: CellType = { ...cell, active: !cell.active }
+            const newRows = [...rows];
+            newRows[0][key] = newCell
+            setRows(newRows);
+        }
+    }
+    const [json, setJSON] = useState("")
+    const handleChangeJson = (event: any) => {
+        setJSON(event.target.value)
+    }
+    const initFromJson = () => {
+        console.log(json)
+        try {
+            const jsonParsed = JSON.parse(json);
+            console.log(jsonParsed)
+            let initConfig: number[] = jsonParsed.data
+            // initConfig[0] = jsonParsed.data
+            console.log(initConfig)
+            if (initConfig) {
+                setBoardWidth(initConfig.length)
+                setRows([initConfig.map((value) => ({ active: !!value }))])
+            }
+        } catch (e) {
+            alert("Invalid json")
+        }
+    }
+
 
     return (
-        <div className="App">
-            <h1>BIN - visualization cellular automata</h1>
-            {renderConfig}
+        <div className="App container">
+            <h1 className="title">BIN - visualization cellular automata</h1>
+            <AutomataConfig
+                boardWidth={boardWidth}
+                delay={delay}
+                maxNumberSteps={maxNumberSteps}
+                setMaxNumberSteps={setMaxNumberSteps}
+                neighborhood={neighborhood}
+                setNeighborhood={(value) => {
+                    setNeighborhood(value)
+
+                }}
+                setBoardWidth={setBoardWidth}
+                setDelay={setDelay}
+            />
             <br/>
             <br/>
             <div>
                 {rows.map((row, key) => (
                     <Automata cells={row}
                               key={key}
+                              onClick={key === 0 ? onClick : undefined}
                     />
                 ))}
             </div>
             <br/>
-            Iteration: {iterations}
+            Iteration: <span className="tag is-success">{iterations}</span>
+            <br/>
+            <br/>
+            {actions}
+            <ConfigRulesSection
+                ruleLength={ruleLength}
+                rules={rules}
+                clearRules={() => setRules(emptyRule(numberOfRules))}
+                randomInitRules={() => setRules(randomRule(numberOfRules))}
+            />
+            <div className="section">
+                <h3 className="subtitle">Import rules</h3>
+                <div className="jsonDiv">
+                <textarea className="textarea" rows={4} cols={50} onChange={handleChangeJson}
+                          placeholder={"Insert JSON values from script"}></textarea>
+                </div>
+                <br/>
+                <button className="button is-primary" onClick={initFromJson}>Inicialize rules</button>
+            </div>
         </div>
+        // </div>
     );
 }
 

@@ -1,18 +1,21 @@
 import React from 'react';
-import {CellType} from "../types";
+import {CellType} from "../models/cellModel";
 
+export type OnClickCell = (cell: CellType, key: number) => void
 type CellProps = {
+    index: number
     cell: CellType
+    onClick?: OnClickCell
 }
 
 const Cell: React.FC<CellProps> = props => {
-    const {cell} = props
+    const {cell, onClick, index} = props
 
     return (
         <div
-            className={"cell"}
+            className="cell"
             style={cell.active ? {background: "black"} : {background: "white"}}
-            onClick={() => console.log("click")}
+            onClick={() => onClick ? onClick(cell, index) : console.log("you can change cells only in the first iteration")}
         />
     )
 };
