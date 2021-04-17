@@ -40,10 +40,10 @@ const AutomataConfig: React.FC<AutomataConfigProps> = (props) => {
                     <input
                         className="input shortInput"
                         pattern="^\d*$"
-                        defaultValue={boardWidth}
+                        value={boardWidth}
                         onChange={(val) => {
                             const rows = parseInt(val.currentTarget.value)
-                            if (rows >= 10 && rows <= 100) {
+                            if (rows >= 1 && rows <= 100) {
                                 setBoardWidth(rows)
                             }
                         }}/>

@@ -4,11 +4,11 @@ import { RuleType } from "../models/cellModel";
 type ImportRulesSectionProps = {
     setNeighborhood: (a: number) => void
     setRules: (a: RuleType[]) => void
+    setBoardWidth: (a: number) => void
 }
 
 const ImportRulesSection:React.FC<ImportRulesSectionProps> = (props) => {
-    const {setNeighborhood, setRules} = props
-
+    const {setNeighborhood, setRules, setBoardWidth} = props
     const [json, setJSON] = useState("")
 
     const handleChangeJson = (event: any) => {
@@ -19,11 +19,13 @@ const ImportRulesSection:React.FC<ImportRulesSectionProps> = (props) => {
             const jsonParsed = JSON.parse(json);
             const initConfig: number[] = jsonParsed.data;
             const neighborhoodJson: number = parseInt(jsonParsed.neighborhood);
+            const cellular_length: number = parseInt(jsonParsed.cellular_length);
             if (initConfig && neighborhoodJson) {
                 const ruleLength = Math.pow(2, neighborhoodJson * 2 + 1);
                 if (ruleLength !== initConfig.length) {
                     alert("Rule length must be " + ruleLength)
                 } else {
+                    setBoardWidth(cellular_length)
                     setNeighborhood(neighborhoodJson);
                     setRules(initConfig.map((value, index) => ({ value: !!value, index: index })));
                 }

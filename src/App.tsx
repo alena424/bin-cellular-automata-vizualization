@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import './App.css';
 import Automata from "./components/Automata";
 import { CellType, RuleType } from "./models/cellModel";
-import { compareArrays, emptyArray, emptyRule, generateNewRow, randomArray, randomRule } from "./utils/cellUtils";
+import { compareArrays, emptyArray, generateNewRow, randomArray, randomRule } from "./utils/cellUtils";
 import AutomataConfig from "./components/AutomataConfig";
 import ConfigRulesSection from "./components/ConfigRulesSection";
 import ImportRulesSection from "./components/ImportRulesSection";
 
 const defaultNumberOfCells = 10
-const defaultNumberOfMaxSteps = 10
+const defaultNumberOfMaxSteps = 20
 const defaultDelay = 1000
 
 const App: React.FC = () => {
@@ -17,7 +17,7 @@ const App: React.FC = () => {
     const [running, setRunning] = useState<NodeJS.Timeout | undefined>(undefined);
     const [delay, setDelay] = useState<number>(defaultDelay);
     const [iterations, setIteration] = useState<number>(0);
-    const [rows, setRows] = useState<CellType[][]>([randomArray(boardWidth)]);
+    const [cells, setCells] = useState<CellType[][]>([randomArray(boardWidth)]);
     const [maxNumberSteps, setMaxNumberSteps] = useState<number>(defaultNumberOfMaxSteps);
     const ruleLength = neighborhood * 2 + 1;
     const numberOfRules = Math.pow(2, ruleLength);
@@ -27,13 +27,17 @@ const App: React.FC = () => {
         setRules(randomRule(numberOfRules))
     }, [numberOfRules])
 
+    React.useEffect(() => {
+        setCells([randomArray(boardWidth)])
+    }, [boardWidth])
+
     const initBoard = () => {
         setIteration(0)
-        setRows([randomArray(boardWidth)])
+        setCells([randomArray(boardWidth)])
     }
     const clear = () => {
         setIteration(0)
-        setRows([emptyArray(boardWidth)])
+        setCells([emptyArray(boardWidth)])
     }
 
     const nextInterval = () => {
@@ -41,7 +45,7 @@ const App: React.FC = () => {
         setIteration((iterations) => {
             return iterations + 1
         })
-        setRows((rows) => {
+        setCells((rows) => {
             const newRows = [...rows];
             const generatedNewRow = generateNewRow(rows[rows.length - 1], neighborhood, rules);
             newRows.push(generatedNewRow);
@@ -63,11 +67,11 @@ const App: React.FC = () => {
 
 
     React.useEffect(() => {
-        if (rows.length < 2) return
-        if (compareArrays(rows[rows.length - 1], rows[rows.length - 2])) {
+        if (cells.length < 2) return
+        if (compareArrays(cells[cells.length - 1], cells[cells.length - 2])) {
             _setRunning(false)
         }
-    }, [rows])
+    }, [cells])
 
     React.useEffect(() => {
         if (iterations >= maxNumberSteps) {
@@ -99,9 +103,9 @@ const App: React.FC = () => {
     const onClick = (cell: CellType, key: number) => {
         if (iterations === 0) {
             const newCell: CellType = { ...cell, active: !cell.active }
-            const newRows = [...rows];
+            const newRows = [...cells];
             newRows[0][key] = newCell
-            setRows(newRows);
+            setCells(newRows);
         }
     }
 
@@ -124,7 +128,7 @@ const App: React.FC = () => {
             <br/>
             <br/>
             <div>
-                {rows.map((row, key) => (
+                {cells.map((row, key) => (
                     <Automata cells={row}
                               key={key}
                               onClick={key === 0 ? onClick : undefined}
@@ -144,6 +148,7 @@ const App: React.FC = () => {
             <ImportRulesSection
                 setNeighborhood={setNeighborhood}
                 setRules={setRules}
+                setBoardWidth={setBoardWidth}
             />
 
         </div>
