@@ -16,3 +16,7 @@ code {
 .shortInput {
   max-width: 75px;
 }
+.paddingLeft{
+  padding-left: 20px;
+  width: 200px;
+}

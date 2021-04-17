@@ -79,7 +79,6 @@ const App: React.FC = () => {
         }
     }, [iterations, maxNumberSteps])
 
-
     const actions = (
         <div className="buttons is-centered">
             <div className={"configItem"}>
@@ -112,6 +111,7 @@ const App: React.FC = () => {
     return (
         <div className="App container">
             <h1 className="title">BIN - visualization cellular automata</h1>
+            <h4 className="subtitle">Alena Tesařová (xtesar36@stud.fit.vutbr.cz)</h4>
             <AutomataConfig
                 boardWidth={boardWidth}
                 delay={delay}
@@ -149,6 +149,7 @@ const App: React.FC = () => {
                 setNeighborhood={setNeighborhood}
                 setRules={setRules}
                 setBoardWidth={setBoardWidth}
+                setMaxNumberSteps={setMaxNumberSteps}
             />
 
         </div>

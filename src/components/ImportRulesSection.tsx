@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { RuleType } from "../models/cellModel";
+import { RuleType, SetNumberFunction } from "../models/cellModel";
 
 type ImportRulesSectionProps = {
-    setNeighborhood: (a: number) => void
+    setNeighborhood: SetNumberFunction
     setRules: (a: RuleType[]) => void
-    setBoardWidth: (a: number) => void
+    setBoardWidth: SetNumberFunction
+    setMaxNumberSteps: SetNumberFunction
 }
 
 const ImportRulesSection:React.FC<ImportRulesSectionProps> = (props) => {
-    const {setNeighborhood, setRules, setBoardWidth} = props
+    const {setNeighborhood, setRules, setBoardWidth, setMaxNumberSteps} = props
     const [json, setJSON] = useState("")
 
     const handleChangeJson = (event: any) => {
@@ -20,6 +21,7 @@ const ImportRulesSection:React.FC<ImportRulesSectionProps> = (props) => {
             const initConfig: number[] = jsonParsed.data;
             const neighborhoodJson: number = parseInt(jsonParsed.neighborhood);
             const cellular_length: number = parseInt(jsonParsed.cellular_length);
+            const steps: number = parseInt(jsonParsed.steps);
             if (initConfig && neighborhoodJson) {
                 const ruleLength = Math.pow(2, neighborhoodJson * 2 + 1);
                 if (ruleLength !== initConfig.length) {
@@ -27,6 +29,7 @@ const ImportRulesSection:React.FC<ImportRulesSectionProps> = (props) => {
                 } else {
                     setBoardWidth(cellular_length)
                     setNeighborhood(neighborhoodJson);
+                    setMaxNumberSteps(steps);
                     setRules(initConfig.map((value, index) => ({ value: !!value, index: index })));
                 }
             }

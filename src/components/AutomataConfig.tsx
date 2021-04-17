@@ -1,6 +1,6 @@
 import React from "react";
+import { SetNumberFunction } from "../models/cellModel";
 
-type SetNumberFunction = (a: number) => void
 type AutomataConfigProps = {
     boardWidth: number
     setBoardWidth: SetNumberFunction
@@ -10,7 +10,6 @@ type AutomataConfigProps = {
     setDelay: SetNumberFunction
     maxNumberSteps: number
     setMaxNumberSteps: SetNumberFunction
-
 }
 
 const AutomataConfig: React.FC<AutomataConfigProps> = (props) => {

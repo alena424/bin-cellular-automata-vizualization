@@ -7,4 +7,6 @@ export type RuleType = {
     value: boolean
 }
 
+export type SetNumberFunction = (a: number) => void
+
 export type OnClickCell = (cell: CellType, key: number) => void
