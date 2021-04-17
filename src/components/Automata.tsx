@@ -1,6 +1,6 @@
 import React from 'react';
-import Cell, { OnClickCell } from "./Cell";
-import { CellType } from "../models/cellModel";
+import Cell from "./Cell";
+import { CellType, OnClickCell } from "../models/cellModel";
 
 type AutomataProps = {
     cells: CellType[]

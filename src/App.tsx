@@ -4,8 +4,8 @@ import Automata from "./components/Automata";
 import { CellType, RuleType } from "./models/cellModel";
 import { compareArrays, emptyArray, emptyRule, generateNewRow, randomArray, randomRule } from "./utils/cellUtils";
 import AutomataConfig from "./components/AutomataConfig";
-import Rule from "./components/Rule";
 import ConfigRulesSection from "./components/ConfigRulesSection";
+import ImportRulesSection from "./components/ImportRulesSection";
 
 const defaultNumberOfCells = 10
 const defaultNumberOfMaxSteps = 10
@@ -23,10 +23,10 @@ const App: React.FC = () => {
     const numberOfRules = Math.pow(2, ruleLength);
     const [rules, setRules] = useState<RuleType[]>(randomRule(numberOfRules));
 
-
     React.useEffect(() => {
         setRules(randomRule(numberOfRules))
     }, [numberOfRules])
+
     const initBoard = () => {
         setIteration(0)
         setRows([randomArray(boardWidth)])
@@ -98,34 +98,12 @@ const App: React.FC = () => {
     )
     const onClick = (cell: CellType, key: number) => {
         if (iterations === 0) {
-            console.log("hello", key, cell)
             const newCell: CellType = { ...cell, active: !cell.active }
             const newRows = [...rows];
             newRows[0][key] = newCell
             setRows(newRows);
         }
     }
-    const [json, setJSON] = useState("")
-    const handleChangeJson = (event: any) => {
-        setJSON(event.target.value)
-    }
-    const initFromJson = () => {
-        console.log(json)
-        try {
-            const jsonParsed = JSON.parse(json);
-            console.log(jsonParsed)
-            let initConfig: number[] = jsonParsed.data
-            // initConfig[0] = jsonParsed.data
-            console.log(initConfig)
-            if (initConfig) {
-                setBoardWidth(initConfig.length)
-                setRows([initConfig.map((value) => ({ active: !!value }))])
-            }
-        } catch (e) {
-            alert("Invalid json")
-        }
-    }
-
 
     return (
         <div className="App container">
@@ -161,20 +139,14 @@ const App: React.FC = () => {
             <ConfigRulesSection
                 ruleLength={ruleLength}
                 rules={rules}
-                clearRules={() => setRules(emptyRule(numberOfRules))}
-                randomInitRules={() => setRules(randomRule(numberOfRules))}
+                setRules={setRules}
             />
-            <div className="section">
-                <h3 className="subtitle">Import rules</h3>
-                <div className="jsonDiv">
-                <textarea className="textarea" rows={4} cols={50} onChange={handleChangeJson}
-                          placeholder={"Insert JSON values from script"}></textarea>
-                </div>
-                <br/>
-                <button className="button is-primary" onClick={initFromJson}>Inicialize rules</button>
-            </div>
+            <ImportRulesSection
+                setNeighborhood={setNeighborhood}
+                setRules={setRules}
+            />
+
         </div>
-        // </div>
     );
 }
 

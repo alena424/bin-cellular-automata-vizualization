@@ -1,7 +1,6 @@
 import React from 'react';
-import {CellType} from "../models/cellModel";
+import { CellType, OnClickCell } from "../models/cellModel";
 
-export type OnClickCell = (cell: CellType, key: number) => void
 type CellProps = {
     index: number
     cell: CellType
