@@ -27,9 +27,9 @@ const ImportRulesSection:React.FC<ImportRulesSectionProps> = (props) => {
                 if (ruleLength !== initConfig.length) {
                     alert("Rule length must be " + ruleLength)
                 } else {
+                    setMaxNumberSteps(steps);
                     setBoardWidth(cellular_length)
                     setNeighborhood(neighborhoodJson);
-                    setMaxNumberSteps(steps);
                     setRules(initConfig.map((value, index) => ({ value: !!value, index: index })));
                 }
             }

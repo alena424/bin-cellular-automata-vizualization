@@ -77,7 +77,7 @@ const AutomataConfig: React.FC<AutomataConfigProps> = (props) => {
                 <input
                     className="input shortInput"
                     pattern="^\d*$"
-                    defaultValue={maxNumberSteps}
+                    value={maxNumberSteps}
                     type="number"
                     onChange={(val) => {
                         const maxSteps = parseInt(val.currentTarget.value)
