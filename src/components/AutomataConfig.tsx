@@ -52,7 +52,7 @@ const AutomataConfig: React.FC<AutomataConfigProps> = (props) => {
                 <label className="label">Neighborhood: </label>
                 <div className="select">
                     <select name="sur" id="neighborhood" onChange={selectNeighborhood}
-                            defaultValue={neighborhood.toString()}>
+                            value={neighborhood.toString()}>
                         <option value="1">1-neighborhood</option>
                         <option value="2">2-neighborhood</option>
                         <option value="3">3-neighborhood</option>
