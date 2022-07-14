@@ -9,7 +9,7 @@ npm i
 npm start
 ```
 ## Program na vizualizaci online
-https://alena424.github.io/bin/
+https://alena424.github.io/bin-cellular-automata-vizualization/
 
 ## Autor
 Alena Tesařová (xtesar36)
