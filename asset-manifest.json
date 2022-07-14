@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/bin/static/css/main.5f1b91eb.chunk.css",
-    "main.js": "/bin/static/js/main.25c73e86.chunk.js",
-    "main.js.map": "/bin/static/js/main.25c73e86.chunk.js.map",
-    "runtime-main.js": "/bin/static/js/runtime-main.a89bf7be.js",
-    "runtime-main.js.map": "/bin/static/js/runtime-main.a89bf7be.js.map",
-    "static/css/2.0d309abc.chunk.css": "/bin/static/css/2.0d309abc.chunk.css",
-    "static/js/2.d1db8693.chunk.js": "/bin/static/js/2.d1db8693.chunk.js",
-    "static/js/2.d1db8693.chunk.js.map": "/bin/static/js/2.d1db8693.chunk.js.map",
-    "static/js/3.d2cc98db.chunk.js": "/bin/static/js/3.d2cc98db.chunk.js",
-    "static/js/3.d2cc98db.chunk.js.map": "/bin/static/js/3.d2cc98db.chunk.js.map",
-    "index.html": "/bin/index.html",
-    "static/css/2.0d309abc.chunk.css.map": "/bin/static/css/2.0d309abc.chunk.css.map",
-    "static/css/main.5f1b91eb.chunk.css.map": "/bin/static/css/main.5f1b91eb.chunk.css.map",
-    "static/js/2.d1db8693.chunk.js.LICENSE.txt": "/bin/static/js/2.d1db8693.chunk.js.LICENSE.txt"
+    "main.css": "/bin-cellular-automata-vizualization/static/css/main.6ed4c21f.chunk.css",
+    "main.js": "/bin-cellular-automata-vizualization/static/js/main.7e98bfe1.chunk.js",
+    "main.js.map": "/bin-cellular-automata-vizualization/static/js/main.7e98bfe1.chunk.js.map",
+    "runtime-main.js": "/bin-cellular-automata-vizualization/static/js/runtime-main.1fce81a4.js",
+    "runtime-main.js.map": "/bin-cellular-automata-vizualization/static/js/runtime-main.1fce81a4.js.map",
+    "static/css/2.68e31a66.chunk.css": "/bin-cellular-automata-vizualization/static/css/2.68e31a66.chunk.css",
+    "static/js/2.dc9c07ab.chunk.js": "/bin-cellular-automata-vizualization/static/js/2.dc9c07ab.chunk.js",
+    "static/js/2.dc9c07ab.chunk.js.map": "/bin-cellular-automata-vizualization/static/js/2.dc9c07ab.chunk.js.map",
+    "static/js/3.e1cbe109.chunk.js": "/bin-cellular-automata-vizualization/static/js/3.e1cbe109.chunk.js",
+    "static/js/3.e1cbe109.chunk.js.map": "/bin-cellular-automata-vizualization/static/js/3.e1cbe109.chunk.js.map",
+    "index.html": "/bin-cellular-automata-vizualization/index.html",
+    "static/css/2.68e31a66.chunk.css.map": "/bin-cellular-automata-vizualization/static/css/2.68e31a66.chunk.css.map",
+    "static/css/main.6ed4c21f.chunk.css.map": "/bin-cellular-automata-vizualization/static/css/main.6ed4c21f.chunk.css.map",
+    "static/js/2.dc9c07ab.chunk.js.LICENSE.txt": "/bin-cellular-automata-vizualization/static/js/2.dc9c07ab.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.a89bf7be.js",
-    "static/css/2.0d309abc.chunk.css",
-    "static/js/2.d1db8693.chunk.js",
-    "static/css/main.5f1b91eb.chunk.css",
-    "static/js/main.25c73e86.chunk.js"
+    "static/js/runtime-main.1fce81a4.js",
+    "static/css/2.68e31a66.chunk.css",
+    "static/js/2.dc9c07ab.chunk.js",
+    "static/css/main.6ed4c21f.chunk.css",
+    "static/js/main.7e98bfe1.chunk.js"
   ]
 }
